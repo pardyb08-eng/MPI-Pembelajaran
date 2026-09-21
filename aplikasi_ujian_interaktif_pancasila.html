@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Singkat: Pancasila Menjawab Tantangan Globalisasi</title>
+  
+  <!-- External Tailwind CSS and Confetti libraries -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  
+  <!-- Google Fonts for Poster Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Caveat:wght@700&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .font-handwriting {
+      font-family: 'Caveat', cursive;
+    }
+    .poster-cloud-bg {
+      background: linear-gradient(180deg, #dbeafe 0%, #eff6ff 40%, #f8fafc 100%);
+    }
+    .lined-paper {
+      background-color: #fffdf0;
+      background-image: repeating-linear-gradient(
+        transparent,
+        transparent 31px,
+        #e2d9b6 31px,
+        #e2d9b6 32px
+      );
+      line-height: 32px;
+    }
+    .red-flag-ribbon {
+      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    }
+    /* Custom smooth transitions */
+    .btn-choice {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  </style>
+</head>
+<body class="poster-cloud-bg text-slate-800 min-h-screen flex flex-col items-center py-6 px-3 sm:px-6">
+
+  <!-- Top Header Poster Style -->
+  <header class="w-full max-w-6xl bg-gradient-to-r from-sky-700 via-blue-800 to-indigo-900 rounded-3xl shadow-2xl overflow-hidden text-white relative mb-8 border-4 border-white">
+    <!-- Decorative Indonesian Flag Wave Top Corner -->
+    <div class="absolute top-0 left-0 w-32 h-16 pointer-events-none overflow-hidden">
+      <div class="w-24 h-6 bg-red-600 transform -rotate-12 -translate-x-6 -translate-y-2 shadow-md"></div>
+      <div class="w-24 h-6 bg-white transform -rotate-12 -translate-x-6 translate-y-3 shadow-md"></div>
+    </div>
+    
+    <div class="relative z-10 px-6 sm:px-10 py-7 flex flex-col md:flex-row items-center justify-between gap-6">
+      <!-- Title & Main Mascot Group -->
+      <div class="flex items-center gap-5 text-center md:text-left">
+        <!-- Mascot Lightbulb Icon -->
+        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-amber-400 text-slate-900 rounded-3xl flex items-center justify-center shadow-lg transform -rotate-6 shrink-0 border-2 border-white ring-4 ring-amber-300/40">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 sm:w-12 sm:h-12 text-blue-950" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C7.58 2 4 5.58 4 10c0 2.8 1.45 5.27 3.65 6.7.35.23.57.62.57 1.05V19c0 .55.45 1 1 1h5.56c.55 0 1-.45 1-1v-1.25c0-.43.22-.82.57-1.05C18.55 15.27 20 12.8 20 10c0-4.42-3.58-8-8-8zm-2 20h4c0 .55-.45 1-1 1h-2c-.55 0-1-.45-1-1z"/>
+          </svg>
+        </div>
+
+        <div>
+          <span class="inline-block px-3.5 py-1 bg-yellow-400 text-blue-950 text-xs sm:text-sm font-extrabold rounded-full uppercase tracking-wider mb-1.5 shadow-sm">
+            Lembar Uji Pemahaman
+          </span>
+          <h1 class="text-2xl sm:text-4xl font-black tracking-tight drop-shadow">
+            Quiz Singkat: <span class="text-amber-300">Menguji Pemahaman Materi</span>
+          </h1>
+          <p class="text-sky-200 text-xs sm:text-base font-semibold mt-1">
+            Pancasila Menjawab Tantangan Globalisasi!
+          </p>
+        </div>
+      </div>
+
+      <!-- Globe Graphic & Timer Status -->
+      <div class="flex flex-col items-center md:items-end gap-2 shrink-0">
+        <div class="bg-white/10 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-white/20 flex items-center gap-3">
+          <div class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></div>
+          <span id="timerDisplay" class="font-mono text-base sm:text-lg font-bold text-amber-300">00:00</span>
+          <span class="text-xs text-sky-100 uppercase font-semibold">Durasi</span>
+        </div>
+        <div class="text-xs text-sky-200 font-medium text-center md:text-right">
+          Total 3 Soal (Pilihan Ganda & Analisis Esai)
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress Indicator Bar -->
+    <div class="bg-slate-950/40 px-6 py-2.5 flex items-center justify-between text-xs text-sky-200 border-t border-white/10">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-white">Status Pengerjaan:</span>
+        <span id="progressSummary" class="text-amber-300 font-bold">0 dari 3 soal terjawab</span>
+      </div>
+      <div class="w-36 sm:w-48 bg-white/20 rounded-full h-2.5 overflow-hidden">
+        <div id="progressBar" class="bg-amber-400 h-full w-0 transition-all duration-300 rounded-full"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Grid: 3 Main Cards (Simulating the 3 columns of the poster) -->
+  <main class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-7 items-start">
+
+    <!-- ============================================== -->
+    <!-- QUESTION 1: BLUE CARD (McKinsey 2030)         -->
+    <!-- ============================================== -->
+    <section class="bg-white rounded-3xl shadow-xl border-4 border-blue-500 overflow-hidden flex flex-col justify-between h-full hover:shadow-2xl transition duration-200">
+      <!-- Card Header -->
+      <div class="bg-blue-600 text-white p-5 flex items-start gap-3.5">
+        <div class="w-12 h-12 rounded-2xl bg-amber-400 text-blue-950 font-black text-2xl flex items-center justify-center shrink-0 shadow-md border-2 border-white">
+          1
+        </div>
+        <p class="text-sm sm:text-base font-bold leading-snug">
+          Menurut laporan McKinsey (2012), Indonesia berpotensi menduduki posisi kekuatan ekonomi dunia ke berapa pada tahun 2030 mendatang jika mampu membenahi SDM dan infrastrukturnya?
+        </p>
+      </div>
+
+      <!-- Card Body Options -->
+      <div class="p-5 sm:p-6 space-y-3.5 flex-1">
+        <div class="space-y-2.5" id="q1-options">
+          
+          <button onclick="handleQ1Select('a', this)" class="btn-choice w-full flex items-center justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-blue-400 hover:bg-blue-50/70 text-left group">
+            <div class="flex items-center gap-3">
+              <span class="w-8 h-8 rounded-xl bg-blue-600 text-white font-bold text-sm flex items-center justify-center shadow-sm">a</span>
+              <span class="font-semibold text-slate-700 group-hover:text-blue-950 text-sm">Peringkat ke-3</span>
+            </div>
+            <div class="q1-check-box w-6 h-6 rounded-lg border-2 border-slate-300 flex items-center justify-center text-xs"></div>
+          </button>
+
+          <button onclick="handleQ1Select('b', this)" class="btn-choice w-full flex items-center justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-blue-400 hover:bg-blue-50/70 text-left group">
+            <div class="flex items-center gap-3">
+              <span class="w-8 h-8 rounded-xl bg-blue-600 text-white font-bold text-sm flex items-center justify-center shadow-sm">b</span>
+              <span class="font-semibold text-slate-700 group-hover:text-blue-950 text-sm">Peringkat ke-5</span>
+            </div>
+            <div class="q1-check-box w-6 h-6 rounded-lg border-2 border-slate-300 flex items-center justify-center text-xs"></div>
+          </button>
+
+          <button onclick="handleQ1Select('c', this)" class="btn-choice w-full flex items-center justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-blue-400 hover:bg-blue-50/70 text-left group">
+            <div class="flex items-center gap-3">
+              <span class="w-8 h-8 rounded-xl bg-blue-600 text-white font-bold text-sm flex items-center justify-center shadow-sm">c</span>
+              <span class="font-semibold text-slate-700 group-hover:text-blue-950 text-sm">Peringkat ke-7</span>
+            </div>
+            <div class="q1-check-box w-6 h-6 rounded-lg border-2 border-slate-300 flex items-center justify-center text-xs"></div>
+          </button>
+
+          <button onclick="handleQ1Select('d', this)" class="btn-choice w-full flex items-center justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-blue-400 hover:bg-blue-50/70 text-left group">
+            <div class="flex items-center gap-3">
+              <span class="w-8 h-8 rounded-xl bg-blue-600 text-white font-bold text-sm flex items-center justify-center shadow-sm">d</span>
+              <span class="font-semibold text-slate-700 group-hover:text-blue-950 text-sm">Peringkat ke-10</span>
+            </div>
+            <div class="q1-check-box w-6 h-6 rounded-lg border-2 border-slate-300 flex items-center justify-center text-xs"></div>
+          </button>
+
+        </div>
+
+        <!-- Explanation Drawer for Q1 -->
+        <div id="q1-feedback" class="hidden p-3.5 rounded-2xl text-xs sm:text-sm font-medium transition duration-200"></div>
+      </div>
+
+      <!-- Card Graphic Footer (Poster Replica) -->
+      <div class="p-4 bg-slate-50 border-t border-slate-200">
+        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-700 via-sky-600 to-indigo-800 text-white p-4 shadow-inner">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-amber-400 text-blue-950 rounded-xl flex items-center justify-center font-black text-lg shrink-0 shadow">
+              📈
+            </div>
+            <div>
+              <div class="text-[10px] tracking-widest uppercase font-extrabold text-amber-300">Target Visi Ekonomi</div>
+              <div class="text-sm font-black leading-tight">INDONESIA MENUJU 7 BESAR DUNIA 2030</div>
+            </div>
+          </div>
+          <div class="text-[11px] text-blue-100 mt-2">
+            Pertumbuhan produktivitas & perbaikan kualitas sumber daya manusia jadi kunci utama.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- QUESTION 2: RED CARD (Kosmopolitanisme)       -->
+    <!-- ============================================== -->
+    <section class="bg-white rounded-3xl shadow-xl border-4 border-red-600 overflow-hidden flex flex-col justify-between h-full hover:shadow-2xl transition duration-200">
+      <!-- Card Header -->
+      <div class="bg-red-600 text-white p-5 flex items-start gap-3.5">
+        <div class="w-12 h-12 rounded-2xl bg-amber-400 text-red-950 font-black text-2xl flex items-center justify-center shrink-0 shadow-md border-2 border-white">
+          2
+        </div>
+        <p class="text-sm sm:text-base font-bold leading-snug">
+          Paham yang menganggap seluruh manusia adalah warga dunia (<em>citizen of the world</em>) hingga berisiko mengecilkan semangat nasionalisme dan cinta tanah air disebut paham ...
+        </p>
+      </div>
+
+      <!-- Card Body Options -->
+      <div class="p-5 sm:p-6 space-y-3.5 flex-1">
+        <div class="space-y-2.5" id="q2-options">
+          
+          <button onclick="handleQ2Select('a', this)" class="btn-choice w-full flex items-center justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-red-400 hover:bg-red-50/70 text-left group">
+            <div class="flex items-center gap-3">
+              <span class="w-8 h-8 rounded-xl bg-red-600 text-white font-bold text-sm flex items-center justify-center shadow-sm">a</span>
+              <span class="font-semibold text-slate-700 group-hover:text-red-950 text-sm">Konsumerisme</span>
+            </div>
+            <div class="q2-check-box w-6 h-6 rounded-lg border-2 border-slate-300 flex items-center justify-center text-xs"></div>
+          </button>
+
+          <button onclick="handleQ2Select('b', this)" class="btn-choice w-full flex items-center justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-red-400 hover:bg-red-50/70 text-left group">
+            <div class="flex items-center gap-3">
+              <span class="w-8 h-8 rounded-xl bg-red-600 text-white font-bold text-sm flex items-center justify-center shadow-sm">b</span>
+              <span class="font-semibold text-slate-700 group-hover:text-red-950 text-sm">Kosmopolitanisme</span>
+            </div>
+            <div class="q2-check-box w-6 h-6 rounded-lg border-2 border-slate-300 flex items-center justify-center text-xs"></div>
+          </button>
+
+          <button onclick="handleQ2Select('c', this)" class="btn-choice w-full flex items-center justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-red-400 hover:bg-red-50/70 text-left group">
+            <div class="flex items-center gap-3">
+              <span class="w-8 h-8 rounded-xl bg-red-600 text-white font-bold text-sm flex items-center justify-center shadow-sm">c</span>
+              <span class="font-semibold text-slate-700 group-hover:text-red-950 text-sm">Fundamentalisme pasar</span>
+            </div>
+            <div class="q2-check-box w-6 h-6 rounded-lg border-2 border-slate-300 flex items-center justify-center text-xs"></div>
+          </button>
+
+          <button onclick="handleQ2Select('d', this)" class="btn-choice w-full flex items-center justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-red-400 hover:bg-red-50/70 text-left group">
+            <div class="flex items-center gap-3">
+              <span class="w-8 h-8 rounded-xl bg-red-600 text-white font-bold text-sm flex items-center justify-center shadow-sm">d</span>
+              <span class="font-semibold text-slate-700 group-hover:text-red-950 text-sm">Pragmatisme</span>
+            </div>
+            <div class="q2-check-box w-6 h-6 rounded-lg border-2 border-slate-300 flex items-center justify-center text-xs"></div>
+          </button>
+
+        </div>
+
+        <!-- Explanation Drawer for Q2 -->
+        <div id="q2-feedback" class="hidden p-3.5 rounded-2xl text-xs sm:text-sm font-medium transition duration-200"></div>
+      </div>
+
+      <!-- Card Graphic Footer (Poster Replica) -->
+      <div class="p-4 bg-slate-50 border-t border-slate-200">
+        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-red-700 via-rose-600 to-amber-700 text-white p-4 shadow-inner">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-white text-red-700 rounded-xl flex items-center justify-center font-black text-lg shrink-0 shadow">
+              🌐
+            </div>
+            <div>
+              <div class="text-[10px] tracking-widest uppercase font-extrabold text-amber-200">Prinsip Kebangsaan</div>
+              <div class="text-sm font-black leading-tight">JADI WARGA DUNIA TANPA KEHILANGAN JATI DIRI BANGSA</div>
+            </div>
+          </div>
+          <div class="text-[11px] text-red-100 mt-2">
+            Terbuka pada kemajuan duniawi tanpa melupakan identitas budaya dan patriotisme.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- QUESTION 3: GREEN CARD (Esai Sila Ke-5)       -->
+    <!-- ============================================== -->
+    <section class="bg-white rounded-3xl shadow-xl border-4 border-emerald-600 overflow-hidden flex flex-col justify-between h-full hover:shadow-2xl transition duration-200">
+      <!-- Card Header -->
+      <div class="bg-emerald-600 text-white p-5 flex items-start gap-3.5">
+        <div class="w-12 h-12 rounded-2xl bg-amber-400 text-emerald-950 font-black text-2xl flex items-center justify-center shrink-0 shadow-md border-2 border-white">
+          3
+        </div>
+        <p class="text-sm sm:text-base font-bold leading-snug">
+          Mengapa fundamentalisme pasar bertentangan dengan prinsip perekonomian yang dijiwai oleh Sila Kelima Pancasila?
+        </p>
+      </div>
+
+      <!-- Card Body Input Paper Area -->
+      <div class="p-5 sm:p-6 space-y-3.5 flex-1">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-emerald-800 uppercase tracking-wide">Uraian Jawaban Singkat</span>
+          <span class="font-handwriting text-emerald-700 text-xl font-bold">Jawablah dengan singkat dan jelas!</span>
+        </div>
+
+        <!-- Lined Notepaper Box -->
+        <div class="relative">
+          <textarea id="q3-essay-input" rows="5" placeholder="Tuliskan argumen Anda di sini... (Kaitkan dengan prinsip keadilan sosial, kesenjangan ekonomi, pasar bebas, dan asas kekeluargaan)"
+            class="w-full p-4 rounded-2xl border-2 border-emerald-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none text-slate-800 text-sm lined-paper resize-none shadow-inner font-medium"></textarea>
+          
+          <div class="flex items-center justify-between text-xs text-slate-500 mt-1.5 px-1">
+            <span id="q3WordCount">0 kata</span>
+            <span class="text-emerald-700 font-semibold">Minimal 10 kata</span>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+          <button onclick="submitEssayQ3()" id="btnSubmitEssay" class="flex-1 py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs sm:text-sm shadow-md hover:shadow transition flex items-center justify-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+            </svg>
+            Evaluasi Jawaban Esai
+          </button>
+          
+          <button onclick="toggleKeyGuide()" class="py-2.5 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl border border-slate-200 transition">
+            Lihat Kunci
+          </button>
+        </div>
+
+        <!-- Feedback & Scoring Result for Q3 -->
+        <div id="q3-feedback" class="hidden p-3.5 rounded-2xl text-xs sm:text-sm font-medium transition duration-200"></div>
+      </div>
+
+      <!-- Card Graphic Footer (Poster Sila 5 Replica) -->
+      <div class="p-4 bg-slate-50 border-t border-slate-200">
+        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 text-white p-4 shadow-inner flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <!-- Garuda / Pancasila 5 Icon Emblem -->
+            <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-red-600 font-black text-xl shadow shrink-0">
+              🦅
+            </div>
+            <div>
+              <div class="text-[10px] tracking-wider uppercase font-black text-amber-200">SILA KE-5</div>
+              <div class="text-xs sm:text-sm font-black leading-tight">Keadilan Sosial bagi Seluruh Rakyat Indonesia</div>
+            </div>
+          </div>
+          <div class="hidden sm:block text-right">
+            <span class="text-[10px] bg-red-900/60 px-2.5 py-1 rounded-full text-amber-200 font-bold border border-white/20">Pasal 33</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Score Calculation & Bottom Actions -->
+  <section class="w-full max-w-6xl mt-8 bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-2 border-slate-200 text-center space-y-6">
+    <div class="max-w-2xl mx-auto space-y-2">
+      <h2 class="text-xl sm:text-2xl font-black text-slate-900">Perhitungan Skor & Rekapitulasi</h2>
+      <p class="text-slate-600 text-xs sm:text-sm">
+        Pastikan kedua soal pilihan ganda telah Anda pilih dan esai telah diperiksa agar evaluasi akhir dapat ditampilkan secara akurat.
+      </p>
+    </div>
+
+    <!-- Status Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto text-left">
+      <div class="bg-blue-50 border border-blue-200 p-4 rounded-2xl">
+        <span class="text-[11px] font-bold text-blue-800 uppercase tracking-wide block">Soal 1 (McKinsey)</span>
+        <div id="statQ1Text" class="text-sm font-extrabold text-slate-500 mt-1">Belum Terjawab</div>
+      </div>
+
+      <div class="bg-red-50 border border-red-200 p-4 rounded-2xl">
+        <span class="text-[11px] font-bold text-red-800 uppercase tracking-wide block">Soal 2 (Kosmopolitan)</span>
+        <div id="statQ2Text" class="text-sm font-extrabold text-slate-500 mt-1">Belum Terjawab</div>
+      </div>
+
+      <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-2xl">
+        <span class="text-[11px] font-bold text-emerald-800 uppercase tracking-wide block">Soal 3 (Esai Sila Ke-5)</span>
+        <div id="statQ3Text" class="text-sm font-extrabold text-slate-500 mt-1">Belum Dievaluasi</div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+      <button onclick="finishAndCalculate()" class="px-8 py-3.5 bg-gradient-to-r from-red-600 via-rose-600 to-red-700 hover:from-red-700 hover:to-rose-800 text-white font-extrabold rounded-2xl shadow-lg hover:shadow-xl transition transform active:scale-95 text-sm sm:text-base">
+        Selesaikan Ujian & Lihat Skor Akhir
+      </button>
+
+      <button onclick="resetAllQuiz()" class="px-6 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-2xl border border-slate-300 transition text-sm sm:text-base">
+        Ulangi Quiz
+      </button>
+    </div>
+
+    <!-- Final Result Display Card -->
+    <div id="resultModal" class="hidden mt-6 p-6 sm:p-8 rounded-3xl bg-slate-900 text-white text-left space-y-4 shadow-2xl border border-slate-700">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-3">
+        <div>
+          <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">Hasil Akhir Evaluasi</span>
+          <h3 id="resultTitle" class="text-2xl font-black text-white mt-1">Hasil Evaluasi Belajar</h3>
+        </div>
+        <div class="bg-white/10 px-6 py-3 rounded-2xl border border-white/20 text-center">
+          <div class="text-3xl sm:text-4xl font-black text-amber-400" id="finalScoreDisplay">0</div>
+          <div class="text-[11px] text-slate-400">Total Poin Maksimal 100</div>
+        </div>
+      </div>
+
+      <p id="resultDescription" class="text-slate-300 text-sm leading-relaxed"></p>
+
+      <div class="bg-white/5 p-4 rounded-2xl border border-white/10 text-xs text-slate-300 space-y-1.5">
+        <strong class="text-white block font-bold">Ringkasan Evaluasi Materi:</strong>
+        <div>• <strong>Soal 1:</strong> Proyeksi McKinsey menegaskan potensi ekonomi posisi ke-7 dunia di 2030 jika diiringi pembenahan SDM.</div>
+        <div>• <strong>Soal 2:</strong> Kosmopolitanisme adalah pandangan warga dunia yang perlu diimbangi kecintaan tanah air dan karakter bangsa.</div>
+        <div>• <strong>Soal 3:</strong> Sila Kelima Pancasila menghendaki keadilan sosial bagi seluruh rakyat bukan pasar bebas tanpa kendali pemodal.</div>
+      </div>
+
+      <div class="pt-2 flex flex-wrap justify-between items-center text-xs text-slate-400">
+        <span>Slogan: <em>Berpikir Kritis • Pahami Nilai • Wujudkan Indonesia yang Lebih Baik</em></span>
+        <span id="timestampResult" class="font-mono text-amber-400"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- In-app Notification Banner (No alert() used) -->
+  <div id="noticeToast" class="fixed bottom-6 right-6 z-50 transform translate-y-32 opacity-0 transition-all duration-300 pointer-events-none max-w-sm w-full">
+    <div class="bg-slate-900/95 backdrop-blur text-white px-5 py-3.5 rounded-2xl shadow-2xl border border-slate-700 flex items-center gap-3">
+      <div id="noticeIcon" class="text-xl">⚠️</div>
+      <div id="noticeText" class="text-xs sm:text-sm font-semibold text-slate-200">Pemberitahuan sistem.</div>
+    </div>
+  </div>
+
+  <!-- Bottom Slogan Banner from Poster -->
+  <footer class="w-full max-w-6xl mt-8 mb-6 text-center space-y-3">
+    <div class="bg-gradient-to-r from-blue-900 via-indigo-900 to-red-900 text-white py-4 px-6 rounded-2xl shadow-lg flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs sm:text-base font-extrabold tracking-wide border-2 border-white/20">
+      <span class="flex items-center gap-1.5 text-amber-300">
+        <span>✦</span> Berpikir Kritis
+      </span>
+      <span class="text-white/40">•</span>
+      <span class="flex items-center gap-1.5 text-rose-300">
+        <span>✦</span> Pahami Nilai
+      </span>
+      <span class="text-white/40">•</span>
+      <span class="flex items-center gap-1.5 text-sky-300">
+        <span>✦</span> Wujudkan Indonesia yang Lebih Baik
+      </span>
+    </div>
+
+    <p class="text-xs text-slate-500 font-medium">
+      Aplikasi Pembelajaran Interaktif Mandiri — Materi PPKn / Pendidikan Pancasila.
+    </p>
+  </footer>
+
+  <script>
+    // Quiz State Object
+    const quizState = {
+      q1: { selected: null, correct: false, answered: false, score: 0 },
+      q2: { selected: null, correct: false, answered: false, score: 0 },
+      q3: { text: "", score: 0, reviewed: false },
+      startTime: Date.now(),
+      timerId: null
+    };
+
+    // Custom Toast Helper (strictly NO alert() / confirm())
+    function showNotification(message, icon = "ℹ️") {
+      const toast = document.getElementById('noticeToast');
+      const text = document.getElementById('noticeText');
+      const iconEl = document.getElementById('noticeIcon');
+
+      text.textContent = message;
+      iconEl.textContent = icon;
+      toast.classList.remove('translate-y-32', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-32', 'opacity-0');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 3200);
+    }
+
+    // Timer Implementation
+    function runTimer() {
+      const timerDisplay = document.getElementById('timerDisplay');
+      quizState.timerId = setInterval(() => {
+        const elapsed = Math.floor((Date.now() - quizState.startTime) / 1000);
+        const mins = String(Math.floor(elapsed / 60)).padStart(2, '0');
+        const secs = String(elapsed % 60).padStart(2, '0');
+        timerDisplay.textContent = `${mins}:${secs}`;
+      }, 1000);
+    }
+    runTimer();
+
+    // Word counter for Question 3
+    const q3Input = document.getElementById('q3-essay-input');
+    const wordCountEl = document.getElementById('q3WordCount');
+    q3Input.addEventListener('input', () => {
+      const val = q3Input.value.trim();
+      const words = val ? val.split(/\s+/).length : 0;
+      wordCountEl.textContent = `${words} kata (${val.length} karakter)`;
+    });
+
+    // Update Progress Indicator
+    function updateProgress() {
+      let count = 0;
+      if (quizState.q1.answered) count++;
+      if (quizState.q2.answered) count++;
+      if (quizState.q3.reviewed) count++;
+
+      document.getElementById('progressSummary').textContent = `${count} dari 3 soal terjawab`;
+      const pct = (count / 3) * 100;
+      document.getElementById('progressBar').style.width = `${pct}%`;
+    }
+
+    function handleQ1Select(choice, btnElement) {
+      if (quizState.q1.answered) return;
+      quizState.q1.answered = true;
+      quizState.q1.selected = choice;
+
+      const feedback = document.getElementById('q1-feedback');
+      const statText = document.getElementById('statQ1Text');
+      const buttons = document.querySelectorAll('#q1-options .btn-choice');
+
+      buttons.forEach(btn => btn.classList.add('pointer-events-none'));
+
+      if (choice === 'c') {
+        quizState.q1.correct = true;
+        quizState.q1.score = 35;
+
+        btnElement.classList.add('bg-emerald-50', 'border-emerald-500');
+        btnElement.querySelector('.q1-check-box').innerHTML = '<span class="text-emerald-700 font-extrabold text-sm">✓</span>';
+        btnElement.querySelector('.q1-check-box').classList.add('border-emerald-500', 'bg-emerald-100');
+
+        feedback.className = "p-3.5 rounded-2xl text-xs sm:text-sm font-medium bg-emerald-50 border border-emerald-300 text-emerald-900 block";
+        feedback.innerHTML = "<strong>Benar! Peringkat ke-7.</strong> Laporan McKinsey Global Institute (2012) memproyeksikan Indonesia berpotensi melesat ke posisi 7 kekuatan ekonomi dunia di tahun 2030 berkat populasi usia produktif dan pasar konsumsi yang dinamis.";
+        statText.textContent = "Benar (+35 Poin)";
+        statText.className = "text-sm font-extrabold text-emerald-600 mt-1";
+      } else {
+        quizState.q1.correct = false;
+        quizState.q1.score = 0;
+
+        btnElement.classList.add('bg-red-50', 'border-red-500');
+        btnElement.querySelector('.q1-check-box').innerHTML = '<span class="text-red-600 font-extrabold text-sm">✕</span>';
+        btnElement.querySelector('.q1-check-box').classList.add('border-red-500', 'bg-red-100');
+
+        // Highlight correct option
+        buttons.forEach(btn => {
+          if (btn.textContent.includes('Peringkat ke-7')) {
+            btn.classList.add('bg-emerald-50', 'border-emerald-400');
+            btn.querySelector('.q1-check-box').innerHTML = '<span class="text-emerald-700 font-bold">✓</span>';
+          }
+        });
+
+        feedback.className = "p-3.5 rounded-2xl text-xs sm:text-sm font-medium bg-red-50 border border-red-300 text-red-900 block";
+        feedback.innerHTML = "<strong>Kurang tepat.</strong> Jawaban yang benar adalah <strong>(c) Peringkat ke-7</strong>, sebagaimana digambarkan dalam target visi infografis 2030.";
+        statText.textContent = "Salah (0 Poin)";
+        statText.className = "text-sm font-extrabold text-red-600 mt-1";
+      }
+
+      updateProgress();
+    }
+
+    function handleQ2Select(choice, btnElement) {
+      if (quizState.q2.answered) return;
+      quizState.q2.answered = true;
+      quizState.q2.selected = choice;
+
+      const feedback = document.getElementById('q2-feedback');
+      const statText = document.getElementById('statQ2Text');
+      const buttons = document.querySelectorAll('#q2-options .btn-choice');
+
+      buttons.forEach(btn => btn.classList.add('pointer-events-none'));
+
+      if (choice === 'b') {
+        quizState.q2.correct = true;
+        quizState.q2.score = 35;
+
+        btnElement.classList.add('bg-emerald-50', 'border-emerald-500');
+        btnElement.querySelector('.q2-check-box').innerHTML = '<span class="text-emerald-700 font-extrabold text-sm">✓</span>';
+        btnElement.querySelector('.q2-check-box').classList.add('border-emerald-500', 'bg-emerald-100');
+
+        feedback.className = "p-3.5 rounded-2xl text-xs sm:text-sm font-medium bg-emerald-50 border border-emerald-300 text-emerald-900 block";
+        feedback.innerHTML = "<strong>Tepat Sekali! Kosmopolitanisme.</strong> Pandangan ini memandang manusia terikat sebagai warga dunia tanpa sekat kewarganegaraan, yang jika berlebihan dapat melunturkan komitmen nasionalisme dan rasa cinta tanah air.";
+        statText.textContent = "Benar (+35 Poin)";
+        statText.className = "text-sm font-extrabold text-emerald-600 mt-1";
+      } else {
+        quizState.q2.correct = false;
+        quizState.q2.score = 0;
+
+        btnElement.classList.add('bg-red-50', 'border-red-500');
+        btnElement.querySelector('.q2-check-box').innerHTML = '<span class="text-red-600 font-extrabold text-sm">✕</span>';
+        btnElement.querySelector('.q2-check-box').classList.add('border-red-500', 'bg-red-100');
+
+        // Highlight correct option
+        buttons.forEach(btn => {
+          if (btn.textContent.includes('Kosmopolitanisme')) {
+            btn.classList.add('bg-emerald-50', 'border-emerald-400');
+            btn.querySelector('.q2-check-box').innerHTML = '<span class="text-emerald-700 font-bold">✓</span>';
+          }
+        });
+
+        feedback.className = "p-3.5 rounded-2xl text-xs sm:text-sm font-medium bg-red-50 border border-red-300 text-red-900 block";
+        feedback.innerHTML = "<strong>Kurang tepat.</strong> Jawaban yang tepat adalah <strong>(b) Kosmopolitanisme</strong>. Konsumerisme adalah gaya hidup konsumtif, sedangkan fundamentalisme pasar adalah doktrin pasar bebas mutlak.";
+        statText.textContent = "Salah (0 Poin)";
+        statText.className = "text-sm font-extrabold text-red-600 mt-1";
+      }
+
+      updateProgress();
+    }
+
+    function submitEssayQ3() {
+      const text = q3Input.value.trim().toLowerCase();
+      const words = text ? text.split(/\s+/).length : 0;
+      const feedback = document.getElementById('q3-feedback');
+      const statText = document.getElementById('statQ3Text');
+
+      if (words < 5) {
+        showNotification("Harap tuliskan uraian jawaban minimal 5-10 kata terlebih dahulu!", "✍️");
+        return;
+      }
+
+      quizState.q3.text = text;
+      quizState.q3.reviewed = true;
+
+      // Essential keywords evaluation
+      const rubrics = [
+        { term: 'keadilan', weight: 6 },
+        { term: 'sosial', weight: 5 },
+        { term: 'pasar bebas', weight: 5 },
+        { term: 'pasar', weight: 3 },
+        { term: 'modal', weight: 4 },
+        { term: 'kapitalis', weight: 4 },
+        { term: 'kesenjangan', weight: 5 },
+        { term: 'ketimpangan', weight: 5 },
+        { term: 'kekeluargaan', weight: 5 },
+        { term: 'rakyat', weight: 4 },
+        { term: 'pemerataan', weight: 4 },
+        { term: 'monopoli', weight: 4 },
+        { term: 'eksploitasi', weight: 4 },
+        { term: 'pasal 33', weight: 5 }
+      ];
+
+      let score = 10; // Base score for effort
+      const matched = [];
+
+      rubrics.forEach(r => {
+        if (text.includes(r.term)) {
+          score += r.weight;
+          if (!matched.includes(r.term)) matched.push(r.term);
+        }
+      });
+
+      // Max essay score is 30
+      const finalEssayScore = Math.min(30, score);
+      quizState.q3.score = finalEssayScore;
+
+      statText.textContent = `Dinilai (+${finalEssayScore} Poin)`;
+      statText.className = "text-sm font-extrabold text-emerald-600 mt-1";
+
+      feedback.className = "p-4 rounded-2xl text-xs sm:text-sm bg-emerald-50 border border-emerald-300 text-emerald-950 block space-y-2.5";
+      feedback.innerHTML = `
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-emerald-900">Analisis Jawaban Anda:</span>
+          <span class="bg-emerald-200 text-emerald-900 font-extrabold px-2.5 py-0.5 rounded-lg text-xs">Skor: ${finalEssayScore}/30</span>
+        </div>
+        <div>
+          <strong>Kata Kunci Terdeteksi:</strong> 
+          ${matched.length > 0 ? matched.map(m => `<span class="inline-block bg-white px-2 py-0.5 rounded border border-emerald-300 text-[11px] font-bold text-emerald-800 mr-1 mt-1">${m}</span>`).join('') : '<span class="text-amber-800 italic">Belum terdeteksi kata kunci spesifik</span>'}
+        </div>
+        <div class="bg-white/80 p-2.5 rounded-xl border border-emerald-200 text-slate-700 text-xs leading-relaxed">
+          <strong class="text-emerald-900 block">Kunci Penjelasan Ideal:</strong>
+          Fundamentalisme pasar menyerahkan seluruh kegiatan ekonomi pada persaingan bebas tanpa kendali moral dan negara, sehingga memicu ketimpangan ekonomi ekstrem dan eksploitasi kaum lemah. Hal ini bertolak belakang dengan <strong>Sila Kelima Pancasila</strong> dan <strong>Pasal 33 UUD NRI 1945</strong> yang mewajibkan perekonomian berakar pada asas kekeluargaan, kemakmuran bersama, dan perlindungan bagi seluruh rakyat.
+        </div>
+      `;
+
+      showNotification("Esai berhasil dievaluasi!", "✅");
+      updateProgress();
+    }
+
+    // Toggle Reference Answer
+    function toggleKeyGuide() {
+      const feedback = document.getElementById('q3-feedback');
+      if (!feedback.classList.contains('hidden')) {
+        feedback.classList.add('hidden');
+        return;
+      }
+      feedback.className = "p-3.5 rounded-2xl text-xs sm:text-sm bg-slate-50 border border-slate-300 text-slate-800 block space-y-2";
+      feedback.innerHTML = `
+        <span class="font-bold text-slate-900 block">Rubrik Jawaban Lengkap:</span>
+        <p class="text-slate-600 leading-relaxed text-xs">
+          1. <strong>Asas Sila Ke-5:</strong> Keadilan sosial, pemerataan kesempatan, kesejahteraan umum, dan asas kekeluargaan.<br>
+          2. <strong>Ciri Fundamentalisme Pasar:</strong> Orientasi profit pemodal besar semata, minim proteksi sosial, dan melebarnya jurang kaya-miskin.
+        </p>
+      `;
+      feedback.classList.remove('hidden');
+    }
+
+    function finishAndCalculate() {
+      if (!quizState.q1.answered || !quizState.q2.answered) {
+        showNotification("Selesaikan dahulu Soal 1 dan Soal 2 sebelum melihat hasil akhir!", "⚠️");
+        return;
+      }
+
+      if (!quizState.q3.reviewed) {
+        if (q3Input.value.trim().length >= 10) {
+          submitEssayQ3();
+        } else {
+          showNotification("Mohon isi dan klik 'Evaluasi Jawaban Esai' pada Soal 3 terlebih dahulu!", "⚠️");
+          return;
+        }
+      }
+
+      const total = quizState.q1.score + quizState.q2.score + quizState.q3.score;
+      const modal = document.getElementById('resultModal');
+      const scoreDisp = document.getElementById('finalScoreDisplay');
+      const title = document.getElementById('resultTitle');
+      const desc = document.getElementById('resultDescription');
+      const timestamp = document.getElementById('timestampResult');
+
+      scoreDisp.textContent = total;
+      timestamp.textContent = "Waktu Selesai: " + new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + " WITA";
+
+      if (total >= 80) {
+        title.textContent = "Istimewa! Pemahaman Kebangsaan Sangat Kuat";
+        desc.textContent = "Selamat! Anda menunjukkan pemahaman yang sangat mendalam mengenai visi Indonesia 2030, kewaspadaan atas arus kosmopolitanisme, serta perwujudan keadilan sosial Sila Kelima Pancasila.";
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+      } else if (total >= 60) {
+        title.textContent = "Bagus! Pemahaman Cukup Baik";
+        desc.textContent = "Hasil ujian Anda menunjukkan penguasaan yang baik terhadap konsep globalisasi dan Pancasila. Perdalam lagi telaah kritis seputar ekonomi kerakyatan dan keadilan sosial.";
+      } else {
+        title.textContent = "Perlu Pengayaan Pemahaman";
+        desc.textContent = "Jangan patah semangat! Pelajari kembali materi infografis mengenai proyeksi McKinsey 2030, bahaya terkikisnya nasionalisme, dan nilai-nilai luhur Sila Kelima.";
+      }
+
+      modal.classList.remove('hidden');
+      modal.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function resetAllQuiz() {
+      quizState.q1 = { selected: null, correct: false, answered: false, score: 0 };
+      quizState.q2 = { selected: null, correct: false, answered: false, score: 0 };
+      quizState.q3 = { text: "", score: 0, reviewed: false };
+      quizState.startTime = Date.now();
+
+      // Reset Q1
+      document.querySelectorAll('#q1-options .btn-choice').forEach(btn => {
+        btn.className = "btn-choice w-full flex items-center justify-between p-3.5 rounded-2xl border-2 border-slate-200 hover:border-blue-400 hover:bg-blue-50/70 text-left group";
+        btn.querySelector('.q1-check-box').innerHTML = "";
+        btn.querySelector('.q1-check-box').className = "q1-check-box w-6 h-6 rounded-lg border-2 border-slate-300 flex items-center justify-center text-xs";
+      });
+      document.getElementById('q1-feedback').className = "hidden";
+      document.getElementById('statQ1Text').textContent = "Belum Terjawab";
+      document.getElementById('statQ1Text').className = "text-sm font-extrabold text-slate-500 mt-1";
+
+      // Reset Q2
+      document.querySelectorAll('#q2-options .btn-choice').forEach(btn => {
+        btn.className = "btn-choice w-full flex items-center justify-between p-3.5 rounded-2xl border-2 border-red-400 hover:border-red-400 hover:bg-red-50/70 text-left group border-slate-200";
+        btn.querySelector('.q2-check-box').innerHTML = "";
+        btn.querySelector('.q2-check-box').className = "q2-check-box w-6 h-6 rounded-lg border-2 border-slate-300 flex items-center justify-center text-xs";
+      });
+      document.getElementById('q2-feedback').className = "hidden";
+      document.getElementById('statQ2Text').textContent = "Belum Terjawab";
+      document.getElementById('statQ2Text').className = "text-sm font-extrabold text-slate-500 mt-1";
+
+      // Reset Q3
+      q3Input.value = "";
+      wordCountEl.textContent = "0 kata";
+      document.getElementById('q3-feedback').className = "hidden";
+      document.getElementById('statQ3Text').textContent = "Belum Dievaluasi";
+      document.getElementById('statQ3Text').className = "text-sm font-extrabold text-slate-500 mt-1";
+
+      // Reset Modal & Progress
+      document.getElementById('resultModal').classList.add('hidden');
+      updateProgress();
+      showNotification("Quiz berhasil direset. Selamat mengerjakan!", "🔄");
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
